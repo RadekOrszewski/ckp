@@ -1,2 +1,428 @@
-<script type="text/javascript" src="https://leanagileninja.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/-bxy8hv/b/1/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=8660ea6f"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Send us your question/request — Lean Agile Ninja</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0d1b2a;
+    --ink-soft:#16293e;
+    --paper:#f4f5f7;
+    --card:#ffffff;
+    --yellow:#fadd10;
+    --rule:#d9dee5;
+    --muted:#5b6b7d;
+    --error:#b3261e;
+    --sora:"Sora", ui-sans-serif, system-ui, sans-serif;
+    --mono:"DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sora);
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .shell{display:grid;grid-template-columns:minmax(300px,26rem) 1fr;min-height:100vh}
 
+  /* ---------- left panel ---------- */
+  .aside{
+    background:var(--ink);
+    color:#fff;
+    padding:3.5rem 2.75rem;
+    border-bottom:6px solid var(--yellow);
+    display:flex;flex-direction:column;gap:2.5rem;
+  }
+  .mark{font-family:var(--mono);font-size:.8125rem;letter-spacing:.04em;color:var(--yellow)}
+  .aside h1{
+    font-size:clamp(2rem,3.4vw,2.9rem);
+    line-height:1.05;
+    letter-spacing:-.025em;
+    font-weight:700;
+    margin:0;
+    max-width:14ch;
+  }
+  .aside p{color:#b9c6d4;max-width:34ch;margin:.9rem 0 0}
+  .flow{list-style:none;margin:0;padding:0;display:grid;gap:1.1rem;counter-reset:step}
+  .flow li{
+    display:grid;grid-template-columns:2rem 1fr;gap:.9rem;align-items:start;
+    font-size:.9375rem;color:#cdd8e3;
+  }
+  .flow li::before{
+    counter-increment:step;content:counter(step);
+    font-family:var(--mono);font-size:.8125rem;color:var(--ink);
+    background:var(--yellow);width:2rem;height:2rem;border-radius:2px;
+    display:grid;place-items:center;
+  }
+  .flow strong{display:block;color:#fff;font-weight:600}
+  .aside footer{margin-top:auto;font-family:var(--mono);font-size:.75rem;color:#7d8fa3}
+  .aside a{color:#cdd8e3}
+
+  /* ---------- form column ---------- */
+  main{padding:3.5rem 2.75rem 5rem;display:flex;justify-content:center}
+  form{width:100%;max-width:38rem}
+  fieldset{border:0;margin:0 0 2.5rem;padding:0}
+  legend{
+    font-size:1.0625rem;font-weight:600;padding:0 0 .35rem;
+    border-bottom:1px solid var(--rule);width:100%;margin-bottom:1.25rem;
+  }
+  label{display:block;font-size:.9375rem;font-weight:600;margin-bottom:.35rem}
+  .hint{font-size:.8125rem;color:var(--muted);font-weight:400;margin:.15rem 0 .5rem}
+  input[type=text],input[type=email],textarea,select{
+    width:100%;font:inherit;font-size:.9375rem;color:var(--ink);
+    background:var(--card);border:1px solid var(--rule);border-radius:3px;
+    padding:.7rem .8rem;
+  }
+  textarea{min-height:9rem;resize:vertical;line-height:1.6}
+  input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible,.opt:focus-within{
+    outline:3px solid var(--yellow);outline-offset:1px;border-color:var(--ink);
+  }
+  .field{margin-bottom:1.4rem}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+  .count{font-family:var(--mono);font-size:.75rem;color:var(--muted);text-align:right;margin-top:.3rem}
+
+  /* radio cards */
+  .opts{display:grid;gap:.5rem}
+  .opt{
+    display:grid;grid-template-columns:1.1rem 1fr;gap:.75rem;align-items:start;
+    background:var(--card);border:1px solid var(--rule);border-left:4px solid var(--rule);
+    border-radius:3px;padding:.85rem 1rem;cursor:pointer;
+  }
+  .opt input{margin:.28rem 0 0;accent-color:var(--ink)}
+  .opt span{font-size:.9375rem;font-weight:600}
+  .opt small{display:block;font-weight:400;color:var(--muted);font-size:.8125rem}
+  .opt:has(input:checked){border-left-color:var(--yellow);border-color:var(--ink)}
+
+  .check{display:grid;grid-template-columns:1.1rem 1fr;gap:.75rem;align-items:start;font-size:.875rem;color:var(--muted)}
+  .check input{margin:.25rem 0 0;accent-color:var(--ink)}
+
+  .err{color:var(--error);font-size:.8125rem;margin-top:.35rem;display:none}
+  .field.invalid .err{display:block}
+  .field.invalid input,.field.invalid textarea{border-color:var(--error)}
+
+  button.send{
+    font:inherit;font-weight:700;font-size:1rem;
+    background:var(--yellow);color:var(--ink);
+    border:0;border-radius:3px;padding:.95rem 2rem;cursor:pointer;width:100%;
+  }
+  button.send[disabled]{opacity:.55;cursor:progress}
+  button.ghost{
+    font:inherit;font-size:.9375rem;font-weight:600;background:none;color:var(--ink);
+    border:1px solid var(--ink);border-radius:3px;padding:.7rem 1.4rem;cursor:pointer;
+  }
+  .legal{font-size:.75rem;color:var(--muted);margin-top:1rem}
+
+  /* states */
+  .panel{display:none;max-width:38rem}
+  .panel.on{display:block}
+  .panel h2{font-size:1.75rem;letter-spacing:-.02em;margin:0 0 .5rem}
+  .panel .bar{height:6px;background:var(--yellow);width:4rem;margin-bottom:1.5rem;border-radius:2px}
+  .fallback{background:var(--card);border:1px solid var(--rule);border-radius:3px;padding:1rem;margin:1.25rem 0}
+  .fallback pre{font-family:var(--mono);font-size:.8125rem;white-space:pre-wrap;margin:0;color:var(--ink)}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+  iframe.sink{display:none}
+
+  @media (max-width:900px){
+    .shell{grid-template-columns:1fr}
+    .aside{padding:2.5rem 1.5rem;gap:1.75rem}
+    main{padding:2.5rem 1.5rem 4rem}
+    .row{grid-template-columns:1fr}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <aside class="aside">
+    <div class="mark">Lean Agile Ninja</div>
+    <div>
+      <h1>Ask us something, or tell us what went wrong.</h1
+    </div>
+    <ol class="flow">
+      <li><span><strong>You send it</strong>One form, no account needed.</span></li>
+      <li><span><strong>It enters the board</strong>Every item becomes a card we pull from, oldest first.</span></li>
+      <li><span><strong>You hear back</strong>Usually within two working days, if you leave an email.</span></li>
+    </ol>
+    <footer>leanagile.ninja · Wrocław</footer>
+  </aside>
+
+  <main>
+    <!-- ============ FORM ============ -->
+    <form id="intake" novalidate>
+      <fieldset>
+        <legend>What are you sending?</legend>
+        <div class="field" id="f-type">
+          <div class="opts">
+            <label class="opt"><input type="radio" name="type" value="Question" checked>
+              <span>I have a question or a request<small>Dates, scope, in-house delivery, pricing, an idea for a topic.</small></span></label>
+            <label class="opt"><input type="radio" name="type" value="Complaint">
+              <span>I have a complaint<small>Something went wrong, or didn't match what you were promised.</small></span></label>
+          </div>
+          <p class="err">Pick one so it lands in the right column.</p>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>The details</legend>
+
+        <div class="field" id="f-title">
+          <label for="title">Title</label>
+          <p class="hint">One line, the way you'd say it out loud.</p>
+          <input type="text" id="title" name="title" maxlength="200" autocomplete="off">
+          <p class="err">Add a short title.</p>
+        </div>
+
+        <div class="field" id="f-body">
+          <label for="body">Your message</label>
+          <p class="hint">For a complaint: what happened, when, and what you expected instead.</p>
+          <textarea id="body" name="body" maxlength="4000"></textarea>
+          <div class="count"><span id="count">0</span>/4000</div>
+          <p class="err">Add at least a sentence or two.</p>
+        </div>
+
+        <div class="field">
+          <label for="context">Which training or page does this concern?</label>
+          <p class="hint">Optional. A course name, a date, or a URL.</p>
+          <input type="text" id="context" name="context" maxlength="200" autocomplete="off">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>About you</legend>
+        <div class="row">
+          <div class="field" id="f-name">
+            <label for="fullname">Name</label>
+            <input type="text" id="fullname" name="fullname" maxlength="120" autocomplete="name">
+            <p class="err">Add your name.</p>
+          </div>
+          <div class="field" id="f-email">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" maxlength="200" autocomplete="email">
+            <p class="err">Check the email address — we reply to it.</p>
+          </div>
+        </div>
+        <div class="field">
+          <label for="org">Company</label>
+          <p class="hint">Optional.</p>
+          <input type="text" id="org" name="org" maxlength="120" autocomplete="organization">
+        </div>
+        <label class="check">
+          <input type="checkbox" id="webinfo" checked>
+          <span>Include my browser and screen details. Helps a lot when something is broken.</span>
+        </label>
+      </fieldset>
+
+      <div class="hp" aria-hidden="true">
+        <label for="website">Leave this empty</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+      </div>
+
+      <button class="send" type="submit" id="submit">Send it</button>
+      <p class="legal">Your message and email are stored in our Jira issue tracker and used only to answer you.</p>
+    </form>
+
+    <!-- ============ SUCCESS ============ -->
+    <section class="panel" id="done" aria-live="polite">
+      <div class="bar"></div>
+      <h2>Sent.</h2>
+      <p>It's on the board. If you left an email, expect a reply within two working days — check spam if it's quiet.</p>
+      <p><button class="ghost" type="button" id="again">Send another</button></p>
+    </section>
+
+    <!-- ============ FAILURE ============ -->
+    <section class="panel" id="failed" aria-live="polite">
+      <div class="bar"></div>
+      <h2>That didn't go through.</h2>
+      <p>The tracker didn't accept the message — usually a blocked script or an offline moment. Your text is below; copy it into an email and it gets the same treatment.</p>
+      <div class="fallback"><pre id="dump"></pre></div>
+      <p>
+        <a class="ghost" style="text-decoration:none;display:inline-block" id="mailto" href="#">Open in email</a>
+        <button class="ghost" type="button" id="retry">Try sending again</button>
+      </p>
+    </section>
+  </main>
+</div>
+
+<iframe class="sink" name="jira-sink" id="jira-sink" title="Jira submission target"></iframe>
+
+<script>
+/* =====================================================================
+   CONFIG — the only part you normally need to touch.
+   ===================================================================== */
+const CONFIG = {
+  site: "https://leanagileninja.atlassian.net",
+  collectorId: "8660ea6f",
+  contactEmail: "hello@leanagile.ninja",   // used by the fallback "Open in email" link
+  timeoutMs: 15000,
+  // Names of the fields your collector expects. Verify them once (see notes).
+  fieldNames: {
+    summary:     "summary",
+    description: "description",
+    fullname:    "fullname",
+    email:       "email"
+  }
+};
+const ENDPOINT = CONFIG.site + "/rest/collectors/1.0/template/form/" + CONFIG.collectorId;
+
+/* ---------- elements ---------- */
+const form   = document.getElementById("intake");
+const done   = document.getElementById("done");
+const failed = document.getElementById("failed");
+const sink   = document.getElementById("jira-sink");
+const btn    = document.getElementById("submit");
+const openedAt = Date.now();
+let pending = null, lastPayload = null;
+
+/* ---------- live counter ---------- */
+const body = document.getElementById("body");
+body.addEventListener("input", () => {
+  document.getElementById("count").textContent = body.value.length;
+});
+
+/* ---------- validation ---------- */
+function fail(id, on){ document.getElementById(id).classList.toggle("invalid", on); }
+
+function validate(){
+  const v = {
+    title: document.getElementById("title").value.trim(),
+    body:  body.value.trim(),
+    name:  document.getElementById("fullname").value.trim(),
+    email: document.getElementById("email").value.trim()
+  };
+  const bad = [];
+  fail("f-title", !v.title);           if(!v.title) bad.push("title");
+  fail("f-body", v.body.length < 10);  if(v.body.length < 10) bad.push("body");
+  fail("f-name", !v.name);             if(!v.name) bad.push("fullname");
+  const okMail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.email);
+  fail("f-email", !okMail);            if(!okMail) bad.push("email");
+
+  if(bad.length){
+    const first = document.querySelector(".field.invalid input, .field.invalid textarea");
+    if(first) first.focus();
+    return null;
+  }
+  return v;
+}
+
+/* ---------- compose what Jira receives ---------- */
+function compose(){
+  const type    = document.querySelector('input[name=type]:checked').value;
+  const context = document.getElementById("context").value.trim();
+  const org     = document.getElementById("org").value.trim();
+  const webinfo = document.getElementById("webinfo").checked;
+
+  const lines = [body.value.trim(), ""];
+  lines.push("---");
+  lines.push("Type: " + type);
+  if(context) lines.push("Concerns: " + context);
+  if(org)     lines.push("Company: " + org);
+  lines.push("Sent from: " + location.href);
+  if(webinfo){
+    lines.push("Browser: " + navigator.userAgent);
+    lines.push("Screen: " + screen.width + "x" + screen.height +
+               " @" + (window.devicePixelRatio || 1) + "x, window " +
+               innerWidth + "x" + innerHeight);
+    lines.push("Language: " + navigator.language +
+               ", timezone " + Intl.DateTimeFormat().resolvedOptions().timeZone);
+  }
+
+  return {
+    summary:     "[" + type + "] " + document.getElementById("title").value.trim(),
+    description: lines.join("\n"),
+    fullname:    document.getElementById("fullname").value.trim(),
+    email:       document.getElementById("email").value.trim(),
+    webinfo:     webinfo
+  };
+}
+
+/* ---------- submit via a real form POST into a hidden iframe.
+     Cross-origin form posts aren't subject to CORS, so this works from
+     any domain. The trade-off: the response is unreadable, so a clean
+     iframe load counts as success and a timeout counts as failure. ---- */
+function send(p){
+  const f = document.createElement("form");
+  f.method = "POST";
+  f.action = ENDPOINT;
+  f.target = "jira-sink";
+  f.acceptCharset = "UTF-8";
+  f.style.display = "none";
+
+  const add = (name, value) => {
+    const i = document.createElement("input");
+    i.type = "hidden"; i.name = name; i.value = value;
+    f.appendChild(i);
+  };
+  add(CONFIG.fieldNames.summary,     p.summary);
+  add(CONFIG.fieldNames.description, p.description);
+  add(CONFIG.fieldNames.fullname,    p.fullname);
+  add(CONFIG.fieldNames.email,       p.email);
+  add("recordWebInfo", p.webinfo ? "true" : "false");
+  if(p.webinfo) add("recordWebInfoConsent", "on");
+
+  document.body.appendChild(f);
+  f.submit();
+  setTimeout(() => f.remove(), 0);
+}
+
+function show(which){
+  form.style.display   = which === "form"   ? "" : "none";
+  done.classList.toggle("on",   which === "done");
+  failed.classList.toggle("on", which === "failed");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function settle(ok){
+  if(!pending) return;
+  clearTimeout(pending); pending = null;
+  btn.disabled = false; btn.textContent = "Send it";
+  if(ok){ show("done"); }
+  else {
+    document.getElementById("dump").textContent =
+      lastPayload.summary + "\n\n" + lastPayload.description;
+    document.getElementById("mailto").href =
+      "mailto:" + CONFIG.contactEmail +
+      "?subject=" + encodeURIComponent(lastPayload.summary) +
+      "&body=" + encodeURIComponent(lastPayload.description);
+    show("failed");
+  }
+}
+
+sink.addEventListener("load", () => { if(pending) settle(true); });
+
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  if(document.getElementById("website").value) return;        // bot filled the honeypot
+  if(Date.now() - openedAt < 3000){ return; }                 // filled impossibly fast
+  if(!validate()) return;
+
+  lastPayload = compose();
+  btn.disabled = true; btn.textContent = "Sending…";
+  pending = setTimeout(() => settle(false), CONFIG.timeoutMs);
+  send(lastPayload);
+});
+
+document.getElementById("retry").addEventListener("click", () => {
+  btn.disabled = true;
+  pending = setTimeout(() => settle(false), CONFIG.timeoutMs);
+  show("form"); btn.textContent = "Sending…";
+  send(lastPayload);
+});
+
+document.getElementById("again").addEventListener("click", () => {
+  form.reset();
+  document.getElementById("count").textContent = "0";
+  document.querySelectorAll(".field").forEach(f => f.classList.remove("invalid"));
+  show("form");
+  document.getElementById("title").focus();
+});
+</script>
+</body>
+</html>
